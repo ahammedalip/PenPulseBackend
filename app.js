@@ -7,7 +7,6 @@ import cors from 'cors'
 import adminRoutes from './src/routes/adminRoutes/adminRoutes.js'
 
 
-
 const app = express()
 dotenv.config()
 
