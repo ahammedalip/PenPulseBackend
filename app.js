@@ -3,14 +3,18 @@ import dotenv from 'dotenv'
 import mongoose from 'mongoose'
 import morgan from 'morgan'
 import cors from 'cors'
+import cookieParser from 'cookie-parser'
 
 import adminRoutes from './src/routes/adminRoutes/adminRoutes.js'
+import userRoutes from './src/routes/userRoutes/userRoutes.js'
 
 
 const app = express()
 dotenv.config()
 
+app.use(cookieParser());
 app.use(express.json())
+
 app.use(urlencoded({extended:true}))
 app.use(morgan('tiny'));
 app.use(cors({
@@ -32,3 +36,4 @@ mongoose.connect(process.env.MONGO)
 
 
 app.use('/api/admin', adminRoutes)
+app.use('/api/user', userRoutes)
