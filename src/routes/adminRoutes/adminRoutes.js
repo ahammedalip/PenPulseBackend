@@ -6,10 +6,11 @@ import authenticateJWT from '../../middlewares/adminAuth.js';
 const router = express.Router()
 
 router.post('/login', login)
-router.post(authenticateJWT)
-router.post('/preference', preferences)
-router.get('/preference', getPreference)
+
+router.post('/preference',authenticateJWT, preferences)
+router.get('/preference',authenticateJWT, getPreference)
 router.put('/preference/:id', editPreference)
+
 
 
 
