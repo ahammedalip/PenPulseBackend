@@ -1,15 +1,15 @@
 import mongoose from 'mongoose';
 
-// Define the schema for a Category
+
 const categorySchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
-    unique: true,  // Ensure category names are unique
+    unique: true,  
     trim: true,
-    minlength: 3,  // Adjust the minimum length as needed
+    minlength: 3,  
   },
-  list:{
+  listed:{
     type: Boolean,
     default: true
   }
