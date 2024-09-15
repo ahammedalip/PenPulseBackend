@@ -24,16 +24,34 @@ app.use(cors({
 
 const PORT = process.env.PORT || 3000
 
-app.listen(PORT,()=>{
-    console.log(`Server is running on http://localhost:${PORT}`)
-})
-mongoose.connect(process.env.MONGO)
-    .then(()=>console.log("Connected to mongodb"))
-    .catch((err)=>{
-        console.log('Error in mongoDB', err)
-        
-    })
 
+// mongoose.connect(process.env.MONGO)
+//     .then(()=>console.log("Connected to mongodb"))
+//     .catch((err)=>{
+//         console.log('Error in mongoDB', err)
+        
+//     })
+let isDbConnected = false
+mongoose.connect(process.env.MONGO)
+    .then(() => {
+        isDbConnected = true;
+        console.log("Connected to MongoDB");
+    })
+    .catch((err) => {
+        isDbConnected = false;
+        console.error('Error in MongoDB', err);
+    });
+
+app.use((req, res, next)=>{
+    if (!isDbConnected) {
+        return res.status(503).json({ error: 'Service Unavailable. Could not connect to the database.' });
+    }
+    next();
+})
 
 app.use('/api/admin', adminRoutes)
 app.use('/api/user', userRoutes)
+
+app.listen(PORT,()=>{
+    console.log(`Server is running on http://localhost:${PORT}`)
+})
