@@ -1,21 +1,25 @@
 import jwt from 'jsonwebtoken';
+import User from '../model/user.js';
 
-const authenticateJWT = (req, res, next) => {
-  const token = req.cookies.userAuthToken; // Get token from the cookie
+const authenticateJWT = async(req, res, next) => {
+  const token = req.cookies.userAuthToken; 
 
   if (!token) {
     return res.status(403).json({ message: 'No token provided, authorization denied' });
   }
 
   try {
-    // console.log('coming here to middleware=================' );
-    // Verify token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     console.log('decoded token is--------', decoded)
-    // Attach the user information to the request object
-    req.user = decoded;
+    const user = await User.find({isBlocked:false, isVerified:true})
+    if(!user){
+      console.log(' user in db is');
+      return res.status(403).json({success:false, message: 'User is blocked'})
+    }
 
-    next(); // Proceed to the next middleware or route handler
+    req.user = decoded.id;
+
+    next(); 
   } catch (error) {
     console.error('JWT verification failed:', error);
     return res.status(401).json({ message: 'Invalid token' });
